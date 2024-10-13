@@ -1,19 +1,46 @@
 document.addEventListener("DOMContentLoaded", function() {
-    function checkAnswer() {
-        const correctAnswer = "4";
-        const userAnswer = document.querySelector('input[name="quiz"]:checked');
-        const feedback = document.getElementById("feedback");
+    const form = document.getElementById("registration-form");
+    const feedbackDiv = document.getElementById("form-feedback");
 
-        if (userAnswer) {
-            if (userAnswer.value === correctAnswer) {
-                feedback.textContent = "Correct! Well done.";
-            } else {
-                feedback.textContent = "That's incorrect. Try again!";
-            }
-        } else {
-            feedback.textContent = "Please select an answer.";
+    form.addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission to the server
+
+        // Retrieve and trim user inputs
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        // Initialize validation status and messages
+        let isValid = true;
+        let messages = [];
+
+        // Username validation: must be at least 3 characters
+        if (username.length < 3) {
+            isValid = false;
+            messages.push("Username must be at least 3 characters long.");
         }
-    }
 
-    document.getElementById("submit-answer").addEventListener("click", checkAnswer);
+        // Email validation: must include "@" and "."
+        if (!email.includes("@") || !email.includes(".")) {
+            isValid = false;
+            messages.push("Please enter a valid email address.");
+        }
+
+        // Password validation: must be at least 8 characters
+        if (password.length < 8) {
+            isValid = false;
+            messages.push("Password must be at least 8 characters long.");
+        }
+
+        // Display feedback
+        feedbackDiv.style.display = "block"; // Make feedback div visible
+
+        if (isValid) {
+            feedbackDiv.textContent = "Registration successful!";
+            feedbackDiv.style.color = "#28a745"; // Success message in green
+        } else {
+            feedbackDiv.innerHTML = messages.join("<br>");
+            feedbackDiv.style.color = "#dc3545"; // Error messages in red
+        }
+    });
 });
